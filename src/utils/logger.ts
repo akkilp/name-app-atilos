@@ -19,7 +19,7 @@ export default class Logger {
   }
 
   public static debug(logText: string): void {
-    console.log(`${this.timestamp()}***** DEBUG *****${logText}`);
+    console.log(`${this.timestamp()} !!!!! DEBUG !!!!! ${logText}`);
   }
 
   public static error(logText: string): void {
