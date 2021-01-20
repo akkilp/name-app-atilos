@@ -22,8 +22,16 @@ export default class Logger {
     console.log(`${this.timestamp()} !!!!! DEBUG !!!!! ${logText}`);
   }
 
-  public static error(logText: string): void {
-    console.log(`${this.timestamp()} // ERROR // ${logText}`);
+  // Mostly used for debugging purposes, and error handling when developing
+  public static error(logText: string, errorMessage?): void {
+    console.log(`
+    |||||||
+    DATE: ${this.timestamp()}
+    ERROR OCCURRED
+    REASON: ${logText}
+    MESSAGE: ${errorMessage}
+    |||||||
+    `);
   }
 
   private static timestamp(): string {

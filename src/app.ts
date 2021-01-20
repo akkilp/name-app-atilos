@@ -1,7 +1,9 @@
+import 'dotenv/config';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
 import loggerMiddleware from './middleware/loggerMiddleware';
+import errorMiddleware from './middleware/errorMiddleware';
 import Logger from './utils/logger';
 
 import Controller from './controller/controller.types';
@@ -16,6 +18,7 @@ class App {
     this.port = port;
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
+    this.initializeErrorHandling();
   }
 
   private initializeMiddlewares() {
@@ -27,6 +30,10 @@ class App {
     controllers.forEach((controller: Controller) => {
       this.app.use('/', controller.router);
     });
+  }
+
+  private initializeErrorHandling() {
+    this.app.use(errorMiddleware);
   }
 
   public listen() {
