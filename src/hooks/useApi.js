@@ -12,10 +12,9 @@ const useApi = (url, mapResults = result => result) => {
       .then(response => setData(mapResults(response.data)))
       .catch(setError)
       .finally(() =>
-        setTimeout(function () {
-          setIsLoading(false);
-        }, 500),
+          setIsLoading(false)
       );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url]);
 
   return { data, isLoading, error };
