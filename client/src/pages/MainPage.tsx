@@ -17,7 +17,7 @@ const mapResults = ({ data }: any) => {
 
 const MainPage: React.FC = () => {
   const { data, isLoading, error } = useApi(
-    "http://localhost:5000/names",
+    "http://localhost:5001/names",
     mapResults
   );
   const {

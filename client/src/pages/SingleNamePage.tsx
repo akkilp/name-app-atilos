@@ -18,7 +18,7 @@ const SingleNamePage: React.FC<SingleNamePageProps> = () => {
   const history = useHistory();
   const { name } = useParams<{ name: string }>();
   const { data, isLoading, error } = useApi(
-    `http://localhost:5000/names/${name}`,
+    `http://localhost:5001/names/${name}`,
     mapResults
   );
 

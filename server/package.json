@@ -4,7 +4,8 @@
   "description": "Solita pre-assignment",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./src/index.ts"
+    "start": "nodemon ./src/index.ts",
+    "database": "docker-compose up"
   },
   "author": "",
   "license": "ISC",
