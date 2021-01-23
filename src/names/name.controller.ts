@@ -17,13 +17,6 @@ class NameController implements Controller {
 
   public router = express.Router();
 
-  private names: NameType[] = [
-    {
-      name: 'Jukka',
-      amount: 2,
-    },
-  ];
-
   constructor() {
     this.initializeRoutes();
     this.populateData();
@@ -40,14 +33,23 @@ class NameController implements Controller {
 
   private async populateData() {
     // Read file
-    const { names } = await readFile();
+    const names = await readFile();
+
+    // Sort by amount
+    names.sort((a, b) => b.amount - a.amount);
+
+    // Create rank
+    const rankedNames = names.map((name, i) => ({
+      ...name,
+      rank: i + 1,
+    }));
 
     // Insert data to db
     await this.nameRepository
       .createQueryBuilder()
       .insert()
       .into(NameEntity)
-      .values(names)
+      .values(rankedNames)
       .onConflict(`("name") DO NOTHING`)
       .execute();
   }
@@ -78,12 +80,14 @@ class NameController implements Controller {
     response: express.Response,
     next: express.NextFunction
   ) => {
-    const requestedName = request.params.name;
+    const requestedName = request.params.name.toLowerCase();
     try {
       const nameData = await this.nameRepository.find({
         where: { name: requestedName },
       });
-      if (nameData && nameData.length !== 0) {
+      const totalAmount = await this.nameRepository.count();
+
+      if (nameData && nameData.length !== 0 && totalAmount) {
         successfullResponse(
           200,
           `Data for name "${requestedName}" succesfully fetched.`,
@@ -91,7 +95,7 @@ class NameController implements Controller {
           nameData
         );
       } else {
-        next(new HttpError(500, 'moro'));
+        next(new NotFound(requestedName));
       }
     } catch (e) {
       if (e && e.errno === -4078) {
@@ -106,7 +110,7 @@ class NameController implements Controller {
     response: express.Response,
     next: express.NextFunction
   ) => {
-    const requestedName = request.params.name;
+    const requestedName: string = request.params.name.toLowerCase();
     try {
       const voteUpdate = await this.nameRepository
         .createQueryBuilder()
@@ -140,7 +144,7 @@ class NameController implements Controller {
     response: express.Response,
     next: express.NextFunction
   ) => {
-    const requestedName: string = request.params.name;
+    const requestedName: string = request.params.name.toLowerCase();
     try {
       const newName = this.nameRepository.create({ name: requestedName });
       await this.nameRepository.save(newName);

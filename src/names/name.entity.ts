@@ -12,6 +12,9 @@ class Name {
   // Defaults to 1 when new name created
   @Column({ default: 1 })
   public amount: number;
+
+  @Column({ default: 1 })
+  public rank: number;
 }
 
 export default Name;
